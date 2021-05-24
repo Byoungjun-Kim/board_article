@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+<div class="container my-3">
+    <table class="table">
+        <thead>
+        <tr class="text-center thead-dark">
+            <th>번호</th>
+            <th style="width:50%">게시판 목록</th>
+            <th>글쓴이</th>
+            <th>작성일시</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if board_list %}
+        {% for board in board_list.items %}
+        <tr class="text-center">
+            <td>{{ board_list.total - ((board_list.page-1) * board_list.per_page) - loop.index0 }}</td>
+            <td class="text-left">
+                <a href="{{ url_for('board.detail', board_id=board.id) }}">{{ board.title }}</a>
+                {% if board.article_set|length > 0 %}
+
+                <span class="text-danger small ml-2">{{ board.article_set|length }}</span>
+                {% endif %}
+            </td>
+            <td>{{ board.user.username }}</td>
+            <td>{{ board.create_date }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="3">질문이 없습니다.</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <ul class="pagination justify-content-center">
+        <!-- 이전페이지 -->
+        {% if board_list.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ board_list.prev_num }}">이전</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+        </li>
+        {% endif %}
+        {% for page_num in board_list.iter_pages() %}
+            {% if page_num %}
+                {% if page_num != board_list.page %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">{{ page_num }}</a>
+                </li>
+                {% endif %}
+           {% else %}
+                <li class="disabled">
+                    <a class="page-link" href="#">...</a>
+                </li>
+           {% endif %}
+        {% endfor %}
+        <!-- 다음페이지 -->
+        {% if board_list.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ board_list.next_num }}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+        </li>
+        {% endif %}
+    </ul>
+    <a href="{{ url_for('board.create') }}" class="btn btn-primary">게시판 추가하기</a>
+    <a href="{{ url_for('dashboard.recent_board_article') }}" class="btn btn-primary">Dashboard</a>
+</div>
+{% endblock %}
+</body>
+</html>

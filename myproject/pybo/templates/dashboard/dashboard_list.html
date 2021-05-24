@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+<div class="container my-3">
+    <table class="table">
+        <thead>
+        <tr class="text-center thead-dark">
+            <th style="width:50%">게시판 제목</th>
+            <th>게시글 제목</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if dash_list %}
+        {% for (board, article_list) in dash_list %}
+        {% for article in article_list %}
+        <tr class="text-center">
+            <td>{{ board.title }}</td>
+            <td>{{ article.title }}</td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+</body>
+</html>

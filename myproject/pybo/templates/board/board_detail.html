@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+<div class="container my-3">
+    <h2 class="border-bottom py-2">{{ board.title }}</h2>
+    {% if g.user == board.user %}
+    <a href="{{ url_for('board.update', board_id=board.id) }}"
+                   class="btn btn-sm btn-outline-secondary">수정</a>
+    <a href="#" class="delete btn btn-sm btn-outline-secondary"
+        data-uri="{{ url_for('board.delete', board_id=board.id) }}">삭제</a>
+    {% endif %}
+
+    <h5 class="border-bottom my-3 py-2">{{ board.article_set|length }}개의 게시글이 있습니다.</h5>
+
+    {% include 'article/article_list.html' %}<br>
+    <a href="{{ url_for('article.create', board_id=board.id) }}" class="btn btn-primary">게시글 추가하기</a>
+</div>
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+$(document).ready(function(){
+    $(".delete").on('click', function() {
+        if(confirm("정말로 삭제하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+});
+</script>
+{% endblock %}
+</body>
+</html>

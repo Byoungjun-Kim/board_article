@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+<div class="container my-3">
+    <h2 class="border-bottom py-2">{{ article.title }}</h2>
+    {% if g.user == article.user %}
+    <a href="{{ url_for('article.update', article_id=article.id) }}"
+                   class="btn btn-sm btn-outline-secondary">수정</a>
+    <a href="#" class="delete btn btn-sm btn-outline-secondary"
+        data-uri="{{ url_for('article.delete', article_id=article.id) }}">삭제</a>
+    {% endif %}
+
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;">{{ article.content }}</div>
+            <div class="d-flex justify-content-end">
+                <div class="badge badge-light p-2">
+                    {{ article.create_date }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+$(document).ready(function(){
+    $(".delete").on('click', function() {
+        if(confirm("정말로 삭제하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+});
+</script>
+{% endblock %}
+</body>
+</html>
